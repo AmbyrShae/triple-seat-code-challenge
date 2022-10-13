@@ -1,0 +1,22 @@
+.search {
+  .container {
+    text-align: center;
+
+    .input {
+      border: 2px solid rgb(232, 232, 232);
+      border-radius: 4px;
+      color: #000000d9;
+      font-size: 16px;
+      height: 32px;
+      line-height: 1.5715;
+      outline: none;
+      padding: 4px 12px;
+      transition: all .3s;
+      width: 400px;
+
+      &:hover {
+        border-color: #61dafb;
+      }
+    }
+  }
+}
