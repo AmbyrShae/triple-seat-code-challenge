@@ -1,47 +1,47 @@
 import * as Rx from 'rxjs';
-import { Observable } from 'rxjs';
-import { interval } from 'rxjs';
+import { Observable, interval, from } from 'rxjs';
 import Table from "./Table"
 
-const StockTable = () => {
-  const createAsset = (assetId, assetType) => {
-    return {
-      id: assetId,
-      name:
-        assetType === 'Stock'
-          ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
-          : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
-      price: Math.random() * 10,
-      lastUpdate: Date.now(),
-      type: assetType,
-    };
+const createAsset = (assetId, assetType) => {
+  return {
+    id: assetId,
+    name:
+      assetType === 'Stock'
+        ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
+        : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
+    price: Math.random() * 10,
+    lastUpdate: Date.now(),
+    type: assetType,
   };
+};
 
-  const getAllAssets = (n) => {
-    const result = [];
-    for (let i = 0; i < n; i++) {
-      result.push(createAsset(i, 'Stock'));
-      result.push(createAsset(i + n, 'Currency'));
-    }
-    return result;
-  };
+const getAllAssets = (n) => {
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    result.push(createAsset(i, 'Stock'));
+    result.push(createAsset(i + n, 'Currency'));
+  }
+  return result;
+};
 
-  const assets = getAllAssets(50);
+const assets = getAllAssets(5);
 
-  const timeObservable = interval(1000);
-  const mock = Observable.create((ob) => {
-    timeObservable.subscribe(() => {
-      Rx.Observable.from(assets)
-        .map((val) => {
-          const random = Math.random();
-          val.price = random >= 0.5 ? val.price + random : val.price - random;
-          val.lastUpdate = Date.now();
-          return val;
-        })
-        .subscribe((val) => ob.next(val));
-      });
-    return () => null; // we don't care about unsubscribe just for a test
-  });
+const timeObservable = interval(1000);
+export const mock = Observable.create((ob) => {
+  timeObservable.subscribe(() => {
+    from(assets)
+      .pipe((val) => {
+        const random = Math.random();
+        val.price = random >= 0.5 ? val.price + random : val.price - random;
+        val.lastUpdate = Date.now();
+        return val;
+      })
+      .subscribe((val) => ob.next(val));
+    });
+  return () => null; // we don't care about unsubscribe just for a test
+});
+
+const StockTable = (props) => {
 
   const stockTableColumns = [
     {

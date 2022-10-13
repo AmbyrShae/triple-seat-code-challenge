@@ -1,4 +1,4 @@
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import React from "react";
 
 const Table = (props) => {
@@ -6,7 +6,18 @@ const Table = (props) => {
   const data = React.useMemo(() => props.data,[]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+    useTable({
+      columns,
+      data,
+      initialState: {
+        sortBy: [
+          {
+              id: 'id',
+              desc: false
+          }
+        ]
+      }},
+    useSortBy);
 
   return (
     <table {...getTableProps()}>
